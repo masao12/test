@@ -1,0 +1,27 @@
+# 特定のバージョンを指定し、このファイル内で使用できる文法が固定
+version: '3'
+
+# 起動したいコンテナを定義。本記事では3つのコンテナ（nginx、app、mysql）を定義
+services:
+  # Nginxの定義
+  nginx:
+    # Nginxコンテナに使用するイメージを指定
+    image: nginx:1.25.0
+    container_name: 'nginx'
+    # ホストマシンのポートをコンテナのポートにマッピング
+    ports:
+      # <ホストマシンのポート>:<コンテナのポート>
+      - 8083:80
+    volumes:
+      # ./srcフォルダをコンテナ内の/var/www/htmlにマウント
+      #- ./src:/var/www/html
+      # ./docker/nginxフォルダをコンテナ内の/etc/nginx/conf.dにマウント
+      - ./docker/nginx:/etc/nginx/conf.d
+  to-server:
+    image: nginx
+    container_name: 'to-container'
+    volumes:
+      - ./src:/var/www/html
+      - ./docker/to:/etc/nginx/conf.d
+    ports:
+      - 7001:80
